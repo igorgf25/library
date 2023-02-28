@@ -49,4 +49,20 @@ public class CategoryServiceImpl implements CategoryService {
 
         return mapper.map(category, CategoryResponseDTO.class);
     }
+
+    @Override
+    public CategoryResponseDTO update(Long id, CategoryRequestDTO categoryRequest) {
+        Optional<Category> alreadyExists = repository.findById(id);
+
+        if (alreadyExists.isEmpty()) {
+            throw new EntityNotFound("Categoria não existe no banco de dados.");
+        }
+
+        Category category = mapper.map(categoryRequest, Category.class);
+        category.setId(id);
+
+        Category categoryResponse = repository.save(category);
+
+        return mapper.map(categoryResponse, CategoryResponseDTO.class);
+    }
 }

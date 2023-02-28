@@ -40,7 +40,14 @@ public class CategoryController {
         if (errors.hasErrors()) {
             throw new EntityInvalid("Informações inválidas, por favor preencha todos os campos");
         }
-
         return new ResponseEntity<>(categoryService.create(category), HttpStatus.CREATED);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<CategoryResponseDTO> updateCategory(@Valid @RequestBody CategoryRequestDTO category,  Errors errors, @PathVariable(value = "id") Long id) {
+        if (errors.hasErrors()) {
+            throw new EntityInvalid("Informações inválidas, por favor preencha todos os campos");
+        }
+        return new ResponseEntity<>(categoryService.update(id, category), HttpStatus.OK);
     }
 }
