@@ -22,11 +22,16 @@ public class CategoryController {
     private final CategoryService categoryService;
 
     @GetMapping
-    public ResponseEntity<Page<Category>> getCategories(
+    public ResponseEntity<Page<Category>> getAll(
             @RequestParam(required = false, defaultValue = "0") int page,
             @RequestParam(required = false, defaultValue = "999") int size,
             @RequestParam(required = false, defaultValue = "id") String sort) {
         return new ResponseEntity<>(categoryService.getAll(page, size, sort), HttpStatus.OK);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<CategoryResponseDTO> getById(@PathVariable(value = "id") Long id) {
+        return new ResponseEntity<>(categoryService.getById(id), HttpStatus.OK);
     }
 
     @PostMapping

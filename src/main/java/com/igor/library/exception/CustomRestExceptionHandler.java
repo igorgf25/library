@@ -34,4 +34,15 @@ public class CustomRestExceptionHandler extends ResponseEntityExceptionHandler {
 
     }
 
+    @ExceptionHandler( { EntityNotFound.class } )
+    public ResponseEntity<ApiErrorDTO> handleEntityNotFound(EntityNotFound ex, WebRequest request){
+
+        String error = "Recurso não encontrado";
+
+        ApiErrorDTO apiError = new ApiErrorDTO(ex.getMessage(), error, HttpStatus.NOT_FOUND);
+
+        return new ResponseEntity<>(apiError, new HttpHeaders(), apiError.getStatus());
+
+    }
+
 }

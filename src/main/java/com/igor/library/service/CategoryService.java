@@ -9,4 +9,6 @@ public interface CategoryService {
     Page<Category> getAll(int page, int size, String sort);
 
     CategoryResponseDTO create(CategoryRequestDTO category);
+
+    CategoryResponseDTO getById(Long id);
 }

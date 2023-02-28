@@ -1,6 +1,7 @@
 package com.igor.library.service.impl;
 
 import com.igor.library.exception.EntityAlreadyExist;
+import com.igor.library.exception.EntityNotFound;
 import com.igor.library.model.Category;
 import com.igor.library.model.request.CategoryRequestDTO;
 import com.igor.library.model.response.CategoryResponseDTO;
@@ -37,8 +38,15 @@ public class CategoryServiceImpl implements CategoryService {
             throw new EntityAlreadyExist("Categoria já registrada no banco de dados.");
         }
 
-        Category categoryResponse =  repository.save(mapper.map(category, Category.class));
+        Category categoryResponse = repository.save(mapper.map(category, Category.class));
 
         return mapper.map(categoryResponse, CategoryResponseDTO.class);
+    }
+
+    @Override
+    public CategoryResponseDTO getById(Long id) {
+        Category category = repository.findById(id).orElseThrow(() -> new EntityNotFound("Categoria com o id: " + id + " não encontrada."));
+
+        return mapper.map(category, CategoryResponseDTO.class);
     }
 }
