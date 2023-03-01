@@ -22,7 +22,7 @@ public class CategoryController {
     private final CategoryService categoryService;
 
     @GetMapping
-    public ResponseEntity<Page<Category>> getAll(
+    public ResponseEntity<Page<CategoryResponseDTO>> getAll(
             @RequestParam(required = false, defaultValue = "0") int page,
             @RequestParam(required = false, defaultValue = "999") int size,
             @RequestParam(required = false, defaultValue = "id") String sort) {

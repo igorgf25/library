@@ -6,7 +6,7 @@ import com.igor.library.model.response.CategoryResponseDTO;
 import org.springframework.data.domain.Page;
 
 public interface CategoryService {
-    Page<Category> getAll(int page, int size, String sort);
+    Page<CategoryResponseDTO> getAll(int page, int size, String sort);
 
     CategoryResponseDTO create(CategoryRequestDTO category);
 

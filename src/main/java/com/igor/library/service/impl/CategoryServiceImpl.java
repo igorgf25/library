@@ -25,9 +25,10 @@ public class CategoryServiceImpl implements CategoryService {
     private final ModelMapper mapper;
 
     @Override
-    public Page<Category> getAll(int page, int size, String sort) {
+    public Page<CategoryResponseDTO> getAll(int page, int size, String sort) {
         Pageable pageable = PageRequest.of(page, size, Sort.Direction.ASC, sort);
-        return repository.findAll(pageable);
+        Page<Category> resultPage = repository.findAll(pageable);
+        return resultPage.map( obj -> mapper.map(obj, CategoryResponseDTO.class));
     }
 
     @Override
