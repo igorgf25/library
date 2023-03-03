@@ -3,7 +3,6 @@ package com.igor.library.service.impl;
 import com.igor.library.exception.EntityAlreadyExist;
 import com.igor.library.exception.EntityNotFound;
 import com.igor.library.model.Author;
-import com.igor.library.model.Book;
 import com.igor.library.model.request.AuthorRequestDTO;
 import com.igor.library.model.response.AuthorResponseDTO;
 import com.igor.library.repository.AuthorRepository;
@@ -17,7 +16,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -26,8 +24,6 @@ public class AuthorServiceImpl implements AuthorService {
 
     private final AuthorRepository repository;
 
-    private final BookRepository bookRepository;
-    
     private final ModelMapper mapper;
 
     @Override

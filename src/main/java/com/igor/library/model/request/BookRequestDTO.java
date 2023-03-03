@@ -1,12 +1,14 @@
 package com.igor.library.model.request;
 
-import com.igor.library.model.response.AuthorResponseDTO;
-import com.igor.library.model.response.CategoryResponseDTO;
+import com.igor.library.model.Author;
+import com.igor.library.model.Category;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
 @Getter
@@ -14,21 +16,28 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 public class BookRequestDTO {
-    private Long id;
 
+    @NotBlank
     private String title;
 
+    @NotBlank
     private String description;
 
+    @NotBlank
     private String numberOfPages;
 
+    @NotBlank
     private String language;
 
+    @NotBlank
     private String publisher;
 
+    @NotNull
     private LocalDate publicationDate;
 
-    private AuthorRequestDTO author;
+    @NotNull
+    private Long author;
 
-    private CategoryRequestDTO category;
+    @NotNull
+    private Long category;
 }
