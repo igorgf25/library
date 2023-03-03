@@ -2,6 +2,7 @@ package com.igor.library.service.impl;
 
 import com.igor.library.exception.EntityAlreadyExist;
 import com.igor.library.exception.EntityNotFound;
+import com.igor.library.model.Author;
 import com.igor.library.model.Category;
 import com.igor.library.model.request.CategoryRequestDTO;
 import com.igor.library.model.response.CategoryResponseDTO;
@@ -53,9 +54,9 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public CategoryResponseDTO update(Long id, CategoryRequestDTO categoryRequest) {
-        Optional<Category> alreadyExists = repository.findById(id);
+        Optional<Category> categoryVerification = repository.findById(id);
 
-        if (alreadyExists.isEmpty()) {
+        if (categoryVerification.isEmpty()) {
             throw new EntityNotFound("Categoria não existe no banco de dados.");
         }
 
@@ -65,5 +66,15 @@ public class CategoryServiceImpl implements CategoryService {
         Category categoryResponse = repository.save(category);
 
         return mapper.map(categoryResponse, CategoryResponseDTO.class);
+    }
+
+    @Override
+    public void delete(Long id) {
+        Optional<Category> authorVerification = repository.findById(id);
+        if (authorVerification.isEmpty()) {
+            throw new EntityNotFound("Categoria não existe no banco de dados.");
+        }
+
+        repository.deleteById(id);
     }
 }

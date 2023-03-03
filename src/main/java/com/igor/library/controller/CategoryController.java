@@ -1,7 +1,6 @@
 package com.igor.library.controller;
 
 import com.igor.library.exception.EntityInvalid;
-import com.igor.library.model.Category;
 import com.igor.library.model.request.CategoryRequestDTO;
 import com.igor.library.model.response.CategoryResponseDTO;
 import com.igor.library.service.CategoryService;
@@ -49,5 +48,11 @@ public class CategoryController {
             throw new EntityInvalid("Informações inválidas, por favor preencha todos os campos");
         }
         return new ResponseEntity<>(categoryService.update(id, category), HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable("id") Long id) {
+        categoryService.delete(id);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }
