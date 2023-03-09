@@ -114,8 +114,4 @@ public class BookServiceImpl implements BookService {
 
         repository.deleteById(id);
     }
-
-
-
-
 }

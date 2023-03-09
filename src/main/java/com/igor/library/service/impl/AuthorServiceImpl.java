@@ -6,7 +6,6 @@ import com.igor.library.model.Author;
 import com.igor.library.model.request.AuthorRequestDTO;
 import com.igor.library.model.response.AuthorResponseDTO;
 import com.igor.library.repository.AuthorRepository;
-import com.igor.library.repository.BookRepository;
 import com.igor.library.service.AuthorService;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;

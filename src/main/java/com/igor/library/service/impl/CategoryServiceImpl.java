@@ -2,7 +2,6 @@ package com.igor.library.service.impl;
 
 import com.igor.library.exception.EntityAlreadyExist;
 import com.igor.library.exception.EntityNotFound;
-import com.igor.library.model.Author;
 import com.igor.library.model.Category;
 import com.igor.library.model.request.CategoryRequestDTO;
 import com.igor.library.model.response.CategoryResponseDTO;
