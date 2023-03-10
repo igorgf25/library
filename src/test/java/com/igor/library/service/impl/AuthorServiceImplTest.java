@@ -11,7 +11,6 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.modelmapper.ModelMapper;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
@@ -22,6 +21,10 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
 
 @SpringBootTest
 class AuthorServiceImplTest {
@@ -41,7 +44,7 @@ class AuthorServiceImplTest {
         List<Author> content = new ArrayList<>();
         content.add(AuthorFactoryMock.FULL_AUTHOR);
         Page<Author> authorsPage = new PageImpl<>(content);
-        Mockito.when(repository.findAll(Mockito.any(Pageable.class))).thenReturn(authorsPage);
+        when(repository.findAll(any(Pageable.class))).thenReturn(authorsPage);
         // 2. Execution
         Page<AuthorResponseDTO> result = service.getAll(0, 10, "id");
         // 3. Verification
@@ -52,8 +55,8 @@ class AuthorServiceImplTest {
     public void testShouldReturnAnAuthorById() {
         // 1. Preparation
         Author mockAuthor = AuthorFactoryMock.FULL_AUTHOR;
-        Mockito.when(repository.findById(1L)).thenReturn(Optional.of(mockAuthor));
-        Mockito.when(mapper.map(Mockito.any(Author.class), Mockito.eq(AuthorResponseDTO.class))).thenReturn(AuthorFactoryMock.FULL_AUTHOR_RESPONSE_DTO);
+        when(repository.findById(1L)).thenReturn(Optional.of(mockAuthor));
+        when(mapper.map(any(Author.class), eq(AuthorResponseDTO.class))).thenReturn(AuthorFactoryMock.FULL_AUTHOR_RESPONSE_DTO);
         // 2. Execution
         AuthorResponseDTO result = service.getById(1L);
         // 3. Verification
@@ -63,7 +66,7 @@ class AuthorServiceImplTest {
     @Test
     void testGetByIdShouldThrownAnErrorNotFoundAuthor() {
         // 1. Preparation
-        Mockito.when(repository.findById(1L)).thenReturn(Optional.empty());
+        when(repository.findById(1L)).thenReturn(Optional.empty());
         // 2. Execution and Verification
         Assertions.assertThrows(EntityNotFound.class, () -> service.getById(1L), "Should thrown an EntityNotFound error");
         // 3. Verification
@@ -73,10 +76,10 @@ class AuthorServiceImplTest {
     void testShouldReturnAnAuthorWhenCreated() {
         // 1. Preparation
         Author mockAuthor = AuthorFactoryMock.FULL_AUTHOR;
-        Mockito.when(repository.findAuthorByBirthDataAndName(Mockito.any(LocalDate.class), Mockito.any(String.class))).thenReturn(Optional.empty());
-        Mockito.when(repository.save(Mockito.any(Author.class))).thenReturn(mockAuthor);
-        Mockito.when(mapper.map(Mockito.any(AuthorRequestDTO.class), Mockito.eq(Author.class))).thenReturn(AuthorFactoryMock.FULL_AUTHOR);
-        Mockito.when(mapper.map(Mockito.any(Author.class), Mockito.eq(AuthorResponseDTO.class))).thenReturn(AuthorFactoryMock.FULL_AUTHOR_RESPONSE_DTO);
+        when(repository.findAuthorByBirthDataAndName(any(LocalDate.class), any(String.class))).thenReturn(Optional.empty());
+        when(repository.save(any(Author.class))).thenReturn(mockAuthor);
+        when(mapper.map(any(AuthorRequestDTO.class), eq(Author.class))).thenReturn(AuthorFactoryMock.FULL_AUTHOR);
+        when(mapper.map(any(Author.class), eq(AuthorResponseDTO.class))).thenReturn(AuthorFactoryMock.FULL_AUTHOR_RESPONSE_DTO);
         // 2. Execution
         AuthorResponseDTO result = service.create(AuthorFactoryMock.FULL_AUTHOR_REQUEST_DTO);
         // 3. Verification
@@ -87,19 +90,19 @@ class AuthorServiceImplTest {
     void testShouldThrownAnEntityAlreadyExistWhenAuthorAlreadExists() {
         // 1. Preparation
         Author mockAuthor = AuthorFactoryMock.FULL_AUTHOR;
-        Mockito.when(repository.findAuthorByBirthDataAndName(Mockito.any(LocalDate.class), Mockito.any(String.class))).thenReturn(Optional.of(AuthorFactoryMock.FULL_AUTHOR));
+        when(repository.findAuthorByBirthDataAndName(any(LocalDate.class), any(String.class))).thenReturn(Optional.of(AuthorFactoryMock.FULL_AUTHOR));
         // 2. Execution and Verification
-        Assertions.assertThrows(EntityAlreadyExist.class, () -> service.create(AuthorFactoryMock.FULL_AUTHOR_REQUEST_DTO));
+        assertThrows(EntityAlreadyExist.class, () -> service.create(AuthorFactoryMock.FULL_AUTHOR_REQUEST_DTO));
     }
 
     @Test
     void testShouldReturnAnAuthorWhenUpdated() {
         // 1. Preparation
         Author mockAuthor = AuthorFactoryMock.FULL_AUTHOR;
-        Mockito.when(repository.findById(Mockito.any(Long.class))).thenReturn(Optional.of(AuthorFactoryMock.FULL_AUTHOR));
-        Mockito.when(repository.save(Mockito.any(Author.class))).thenReturn(mockAuthor);
-        Mockito.when(mapper.map(Mockito.any(AuthorRequestDTO.class), Mockito.eq(Author.class))).thenReturn(AuthorFactoryMock.FULL_AUTHOR);
-        Mockito.when(mapper.map(Mockito.any(Author.class), Mockito.eq(AuthorResponseDTO.class))).thenReturn(AuthorFactoryMock.FULL_AUTHOR_RESPONSE_DTO);
+        when(repository.findById(any(Long.class))).thenReturn(Optional.of(AuthorFactoryMock.FULL_AUTHOR));
+        when(repository.save(any(Author.class))).thenReturn(mockAuthor);
+        when(mapper.map(any(AuthorRequestDTO.class), eq(Author.class))).thenReturn(AuthorFactoryMock.FULL_AUTHOR);
+        when(mapper.map(any(Author.class), eq(AuthorResponseDTO.class))).thenReturn(AuthorFactoryMock.FULL_AUTHOR_RESPONSE_DTO);
         // 2. Execution
         AuthorResponseDTO result = service.update(1L, AuthorFactoryMock.FULL_AUTHOR_REQUEST_DTO);
         // 3. Verification
@@ -110,7 +113,7 @@ class AuthorServiceImplTest {
     void testShouldThrownAnEntityAlreadyExistWhenAuthorDontExistUpdate() {
         // 1. Preparation
         Author mockAuthor = AuthorFactoryMock.FULL_AUTHOR;
-        Mockito.when(repository.findById(Mockito.any(Long.class))).thenReturn(Optional.empty());
+        when(repository.findById(any(Long.class))).thenReturn(Optional.empty());
         // 2. Execution and Verification
         Assertions.assertThrows(EntityNotFound.class, () -> service.update(1L, AuthorFactoryMock.FULL_AUTHOR_REQUEST_DTO));
     }
@@ -119,18 +122,18 @@ class AuthorServiceImplTest {
     void testShouldDeleteAnAuthor() {
         // 1. Preparation
         Author mockAuthor = AuthorFactoryMock.FULL_AUTHOR;
-        Mockito.when(repository.findById(Mockito.any(Long.class))).thenReturn(Optional.of(AuthorFactoryMock.FULL_AUTHOR));
+        when(repository.findById(any(Long.class))).thenReturn(Optional.of(AuthorFactoryMock.FULL_AUTHOR));
         // 2. Execution
         service.delete(1L);
         // 3. Verification
-        Mockito.verify(repository).deleteById(Mockito.any(Long.class));
+        verify(repository).deleteById(any(Long.class));
     }
 
     @Test
     void testShouldThrowAnEntityNotFoundErrorWhenAuthor() {
         // 1. Preparation
         Author mockAuthor = AuthorFactoryMock.FULL_AUTHOR;
-        Mockito.when(repository.findById(Mockito.any(Long.class))).thenReturn(Optional.empty());
+        when(repository.findById(any(Long.class))).thenReturn(Optional.empty());
         // 2. Execution and Verification
         Assertions.assertThrows(EntityNotFound.class, () -> service.delete(1L));
     }

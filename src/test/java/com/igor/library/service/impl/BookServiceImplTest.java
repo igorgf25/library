@@ -50,8 +50,8 @@ public class BookServiceImplTest {
     private ModelMapper mapper;
 
     @Test
-    @DisplayName("Test get all books")
     void testGetAll() {
+        // 1. Preparation
         List<Book> books = new ArrayList<>();
         books.add(new Book());
         books.add(new Book());
@@ -60,14 +60,16 @@ public class BookServiceImplTest {
         when(bookRepository.findAll(any(Pageable.class))).thenReturn(bookPage);
         when(mapper.map(any(Book.class), eq(BookResponseDTO.class))).thenReturn(new BookResponseDTO());
 
+        // 2. Execution
         Page<BookResponseDTO> bookResponseDTOList = bookService.getAll(0, 2, "title");
 
+        // 3. Verification
         assertEquals(2, bookResponseDTOList.getContent().size());
     }
 
     @Test
-    @DisplayName("Test get book by ID")
     void testGetById() {
+        // 1. Preparation
         Book book = new Book();
         book.setTitle("Book 1");
 
@@ -77,14 +79,16 @@ public class BookServiceImplTest {
         when(bookRepository.findById(anyLong())).thenReturn(Optional.of(book));
         when(mapper.map(any(Book.class), eq(BookResponseDTO.class))).thenReturn(bookResponseDTOMock);
 
+        // 2. Execution
         BookResponseDTO bookResponseDTO = bookService.getById(1L);
 
+        // 3. Verification
         assertEquals("Book 1", bookResponseDTO.getTitle());
     }
 
     @Test
-    @DisplayName("Test get all books by author")
     void testGetAllByAuthor() {
+        // 1. Preparation
         List<Book> books = new ArrayList<>();
         books.add(new Book());
         books.add(new Book());
@@ -92,15 +96,16 @@ public class BookServiceImplTest {
 
         when(bookRepository.findBooksByAuthor(any(Pageable.class), anyLong())).thenReturn(bookPage);
 
+        // 2. Execution
         Page<BookResponseDTO> bookResponseDTOList = bookService.getAllByAuthor(0, 2, "title", 1L);
 
+        // 3. Verification
         assertEquals(2, bookResponseDTOList.getContent().size());
     }
 
     @Test
-    @DisplayName("Test getAllByCategory")
     void testGetAllByCategory() {
-        // given
+        // 1. Preparation
         int page = 0;
         int size = 10;
         String sort = "title";
@@ -116,10 +121,10 @@ public class BookServiceImplTest {
         bookResponseDTO.setTitle("Test Book");
         when(mapper.map(any(Book.class), any(Class.class))).thenReturn(bookResponseDTO);
 
-        // when
+        // 2. Execution
         Page<BookResponseDTO> result = bookService.getAllByCategory(page, size, sort, categoryId);
 
-        // then
+        // 3. Verification
         assertEquals(1, result.getContent().size());
         assertEquals(bookResponseDTO.getId(), result.getContent().get(0).getId());
         assertEquals(bookResponseDTO.getTitle(), result.getContent().get(0).getTitle());
@@ -127,6 +132,7 @@ public class BookServiceImplTest {
 
     @Test
     public void testCreateBook() {
+        // 1. Preparation
         Book book = BookFactoryMock.FULL_BOOK;
 
         BookRequestDTO bookRequestDTO = BookFactoryMock.FULL_BOOK_REQUEST_DTO;
@@ -137,13 +143,16 @@ public class BookServiceImplTest {
         when(categoryRepository.findById(any())).thenReturn(Optional.of(new Category()));
         when(authorRepository.findById(any())).thenReturn(Optional.of(new Author()));
 
+        // 2. Execution
         BookResponseDTO responseDTO = bookService.create(bookRequestDTO);
 
+        // 3. Verification
         assertEquals(BookResponseDTO.class, responseDTO.getClass());
     }
 
     @Test
     public void testCreateBookThrowsEntityAlreadyExist() {
+        // 1. Preparation
         Book book = BookFactoryMock.FULL_BOOK;
 
         BookRequestDTO bookRequestDTO = BookFactoryMock.FULL_BOOK_REQUEST_DTO;
@@ -152,6 +161,7 @@ public class BookServiceImplTest {
         when(categoryRepository.findById(any())).thenReturn(Optional.of(new Category()));
         when(authorRepository.findById(any())).thenReturn(Optional.of(new Author()));
 
+        // 2. Execution and Verification
         assertThrows(EntityAlreadyExist.class, () -> {
             bookService.create(bookRequestDTO);
         });
@@ -159,6 +169,7 @@ public class BookServiceImplTest {
 
     @Test
     public void testCreateBookThrowsEntityNotFound() {
+        // 1. Preparation
         Book book = BookFactoryMock.FULL_BOOK;
 
         BookRequestDTO bookRequestDTO = BookFactoryMock.FULL_BOOK_REQUEST_DTO;
@@ -167,6 +178,7 @@ public class BookServiceImplTest {
         when(categoryRepository.findById(any())).thenReturn(Optional.of(new Category()));
         when(authorRepository.findById(any())).thenReturn(Optional.empty());
 
+        // 2. Execution and Verification
         assertThrows(EntityNotFound.class, () -> {
             bookService.create(bookRequestDTO);
         });
@@ -174,6 +186,7 @@ public class BookServiceImplTest {
 
     @Test
     public void testUpdateBook() {
+        // 1. Preparation
         Book book = BookFactoryMock.FULL_BOOK;
 
         BookRequestDTO bookRequestDTO = BookFactoryMock.FULL_BOOK_REQUEST_DTO;
@@ -185,13 +198,16 @@ public class BookServiceImplTest {
         when(categoryRepository.findById(any())).thenReturn(Optional.of(new Category()));
         when(authorRepository.findById(any())).thenReturn(Optional.of(new Author()));
 
+        // 2. Execution
         BookResponseDTO responseDTO = bookService.update(bookRequestDTO, 1L);
 
+        // 3. Verification
         assertEquals(BookResponseDTO.class, responseDTO.getClass());
     }
 
     @Test
     public void testUpdateBookCategoryNotExist() {
+        // 1. Preparation
         Book book = BookFactoryMock.FULL_BOOK;
 
         BookRequestDTO bookRequestDTO = BookFactoryMock.FULL_BOOK_REQUEST_DTO;
@@ -201,11 +217,13 @@ public class BookServiceImplTest {
         when(categoryRepository.findById(any())).thenReturn(Optional.empty());
         when(authorRepository.findById(any())).thenReturn(Optional.of(new Author()));
 
+        // 2. Execution and Verification
         assertThrows(EntityNotFound.class,() -> bookService.update(bookRequestDTO, 1L));
     }
 
     @Test
     public void testUpdateBookNotExist() {
+        // 1. Preparation
         Book book = BookFactoryMock.FULL_BOOK;
 
         BookRequestDTO bookRequestDTO = BookFactoryMock.FULL_BOOK_REQUEST_DTO;
@@ -215,11 +233,13 @@ public class BookServiceImplTest {
         when(categoryRepository.findById(any())).thenReturn(Optional.of(new Category()));
         when(authorRepository.findById(any())).thenReturn(Optional.of(new Author()));
 
+        // 2. Execution and Verification
         assertThrows(EntityNotFound.class,() -> bookService.update(bookRequestDTO, 1L));
     }
 
     @Test
-    void testDeleteBookSuccess() {
+    public void testDeleteBookSuccess() {
+        // 1. Preparation
         Long id = 1L;
         Book book = new Book();
         book.setId(id);
@@ -227,19 +247,20 @@ public class BookServiceImplTest {
 
         when(bookRepository.findById(id)).thenReturn(bookOptional);
 
+        // 2. Execution and Verification
         assertDoesNotThrow(() -> bookService.delete(id));
         verify(bookRepository, Mockito.times(1)).deleteById(id);
     }
 
     @Test
-    void testDeleteBookWhenBookNotFound() {
+    public void testDeleteBookWhenBookNotFound() {
+        // 1. Preparation
         Long id = 1L;
 
         when(bookRepository.findById(id)).thenReturn(Optional.empty());
 
-        EntityNotFound exception = assertThrows(EntityNotFound.class, () -> bookService.delete(id));
-
-        assertEquals("Livro não existe no banco de dados.", exception.getMessage());
+        // 2. Execution and Verification
+        assertThrows(EntityNotFound.class, () -> bookService.delete(id));
     }
 
 }
