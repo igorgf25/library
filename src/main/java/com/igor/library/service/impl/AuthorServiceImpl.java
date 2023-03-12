@@ -43,7 +43,7 @@ public class AuthorServiceImpl implements AuthorService {
         Optional<Author> alreadyExist = repository.findAuthorByBirthDataAndName(author.getBirthDate(), author.getName());
 
         if (alreadyExist.isPresent()) {
-            throw new EntityAlreadyExist("Author já registrada no banco de dados.");
+            throw new EntityAlreadyExist("Author já registrado no banco de dados.");
         }
 
         Author authorResponse = repository.save(mapper.map(author, Author.class));
