@@ -1,9 +1,7 @@
 package com.igor.library.controller;
 
 import com.igor.library.exception.EntityInvalid;
-import com.igor.library.model.request.AuthorRequestDTO;
 import com.igor.library.model.request.BookRequestDTO;
-import com.igor.library.model.response.AuthorResponseDTO;
 import com.igor.library.model.response.BookResponseDTO;
 import com.igor.library.service.BookService;
 import lombok.AllArgsConstructor;
