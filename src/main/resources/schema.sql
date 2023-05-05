@@ -28,3 +28,22 @@ CREATE TABLE tb_books (
     foreign key (author_id) references tb_authors(author_id),
     foreign key (category_id) references tb_categories(category_id)
 );
+
+CREATE TABLE tb_users (
+    user_id bigint primary key auto_increment ,
+    username varchar(100) not null,
+    password varchar(100) not null
+);
+
+CREATE TABLE tb_roles (
+    role_id bigint primary key auto_increment ,
+    name varchar(100) not null
+);
+
+CREATE TABLE tb_roles_users (
+    role_id bigint not null ,
+    user_id bigint not null ,
+    foreign key (role_id) references tb_roles(role_id),
+    foreign key (user_id) references tb_users(user_id)
+
+);

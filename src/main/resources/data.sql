@@ -18,3 +18,6 @@ INSERT INTO tb_books (title, description, number_of_pages, language, publisher, 
         223, 'English', 'Bloomsbury (UK)', '1997-05-26', 2, 1),
     ('The Lord of the Rings', 'The Lord of the Rings is an epic high-fantasy novel by English author and scholar J. R. R. Tolkien. Set in Middle-earth, the story began as a sequel to Tolkiens 1937 childrens book The Hobbit, but eventually developed into a much larger work. Written in stages between 1937 and 1949, The Lord of the Rings is one of the best-selling books ever written, with over 150 million copies sold.',
         1137, 'English', 'Allen & Unwin', '1954-07-29', 3, 1);
+
+INSERT INTO tb_roles(role_id, name) VALUES(1, 'USER');
+INSERT INTO tb_roles(role_id, name) VALUES(2, 'ADMIN');

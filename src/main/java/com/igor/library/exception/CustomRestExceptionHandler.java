@@ -45,4 +45,15 @@ public class CustomRestExceptionHandler extends ResponseEntityExceptionHandler {
 
     }
 
+    @ExceptionHandler( { AuthenticationFailed.class } )
+    public ResponseEntity<ApiErrorDTO> handleAuthenticationFailed(AuthenticationFailed ex, WebRequest request){
+
+        String error = "Erro na autenticação";
+
+        ApiErrorDTO apiError = new ApiErrorDTO(ex.getMessage(), error, HttpStatus.BAD_REQUEST);
+
+        return new ResponseEntity<>(apiError, new HttpHeaders(), apiError.getStatus());
+
+    }
+
 }
