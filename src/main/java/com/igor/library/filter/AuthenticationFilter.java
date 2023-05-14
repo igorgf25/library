@@ -1,12 +1,9 @@
 package com.igor.library.filter;
 
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.igor.library.exception.AuthenticationFailed;
 import com.igor.library.model.User;
-import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
+import com.igor.library.util.JwtUtil;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -18,19 +15,17 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Date;
 
-
-@AllArgsConstructor
 public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
     private final AuthenticationManager authenticationManager;
 
-    @Value("${jwt.expiration-time}")
-    private String tokenExpirationTime;
+    private JwtUtil jwtUtil;
 
-    @Value("${jwt.secret}")
-    private String tokenSecret;
+    public AuthenticationFilter(AuthenticationManager authenticationManager, JwtUtil jwtUtil) {
+        this.authenticationManager = authenticationManager;
+        this.jwtUtil = jwtUtil;
+    }
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
@@ -49,12 +44,7 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
             throws IOException, ServletException {
         User user = (User) authResult.getPrincipal();
 
-        Date today = new Date();
-        Date expirationDate = new Date(today.getTime() + Long.parseLong(tokenExpirationTime));
-
-        String token = JWT.create().withSubject(user.getUsername())
-                .withExpiresAt(expirationDate)
-                .sign(Algorithm.HMAC512(tokenSecret));
+        String token = jwtUtil.generateJWTToken(user);
 
         response.getWriter().write(token);
         response.getWriter().flush();

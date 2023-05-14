@@ -1,6 +1,9 @@
 drop table if exists tb_books;
 drop table if exists tb_authors;
 drop table if exists tb_categories;
+drop table if exists tb_roles_users;
+drop table if exists tb_users;
+drop table if exists tb_roles;
 
 CREATE TABLE tb_authors (
     author_id bigint primary key auto_increment ,

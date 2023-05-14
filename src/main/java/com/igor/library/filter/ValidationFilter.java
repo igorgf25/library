@@ -1,8 +1,7 @@
 package com.igor.library.filter;
 
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.algorithms.Algorithm;
 import com.igor.library.security.UserDetailsServiceImpl;
+import com.igor.library.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -18,15 +17,17 @@ import java.io.IOException;
 public class ValidationFilter extends BasicAuthenticationFilter {
 
     private final UserDetailsServiceImpl service;
+    private JwtUtil jwtUtil;
     public static final String HEADER_ATTRIBUTE = "Authorization";
     public static final String TOKEN_PREFIX = "Bearer ";
 
     @Value("${jwt.secret}")
     private String tokenSecret;
 
-    public ValidationFilter(AuthenticationManager authenticationManager, UserDetailsServiceImpl service) {
+    public ValidationFilter(AuthenticationManager authenticationManager, UserDetailsServiceImpl service, JwtUtil jwtUtil) {
         super(authenticationManager);
         this.service = service;
+        this.jwtUtil = jwtUtil;
     }
 
     @Override
@@ -52,16 +53,13 @@ public class ValidationFilter extends BasicAuthenticationFilter {
     }
 
     private UsernamePasswordAuthenticationToken getAuthenticationToken(String token) {
-        String usuario = JWT.require(Algorithm.HMAC512(tokenSecret))
-                .build()
-                .verify(token)
-                .getSubject();
+        String user = jwtUtil.getUserFromJWT(token);
 
-        if (usuario == null) {
+        if (user == null) {
             return null;
         }
 
-        return new UsernamePasswordAuthenticationToken(usuario, null,
-                service.loadUserByUsername(usuario).getAuthorities());
+        return new UsernamePasswordAuthenticationToken(user, null,
+                service.loadUserByUsername(user).getAuthorities());
     }
 }
