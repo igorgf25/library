@@ -17,17 +17,26 @@ import javax.validation.Valid;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("user")
+@RequestMapping()
 public class UserController {
 
     private final UserService userService;
 
-    @PostMapping
-    public ResponseEntity<UserResponseDTO> createCategory(@Valid @RequestBody UserRequestDTO user, Errors errors) {
+    @PostMapping("user")
+    public ResponseEntity<UserResponseDTO> createUser(@Valid @RequestBody UserRequestDTO user, Errors errors) {
 
         if (errors.hasErrors()) {
             throw new EntityInvalid("Informações inválidas, por favor preencha todos os campos");
         }
-        return new ResponseEntity<>(userService.create(user), HttpStatus.CREATED);
+        return new ResponseEntity<>(userService.createUser(user), HttpStatus.CREATED);
+    }
+
+    @PostMapping("admin")
+    public ResponseEntity<UserResponseDTO> createAdmin(@Valid @RequestBody UserRequestDTO user, Errors errors) {
+
+        if (errors.hasErrors()) {
+            throw new EntityInvalid("Informações inválidas, por favor preencha todos os campos");
+        }
+        return new ResponseEntity<>(userService.createAdmin(user), HttpStatus.CREATED);
     }
 }

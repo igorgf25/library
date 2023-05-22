@@ -25,19 +25,33 @@ public class UserServiceImpl implements UserService {
     private final RoleRepository roleRepository;
 
     private final static Long USER_ROLE_ID = 1L;
+    private final static Long ADMIN_ROLE_ID = 2L;
 
     @Override
-    public UserResponseDTO create(UserRequestDTO user) {
+    public UserResponseDTO createUser(UserRequestDTO user) {
+
+        User response = repository.save(userConverter(user, USER_ROLE_ID));
+
+        return mapper.map(response, UserResponseDTO.class);
+    }
+
+    @Override
+    public UserResponseDTO createAdmin(UserRequestDTO user) {
+
+        User response = repository.save(userConverter(user, ADMIN_ROLE_ID));
+
+        return mapper.map(response, UserResponseDTO.class);
+    }
+
+    public User userConverter(UserRequestDTO userRequest, Long role) {
         BCryptPasswordEncoder bCrypt = new BCryptPasswordEncoder();
 
-        User userRequest = mapper.map(user, User.class);
+        User user = mapper.map(userRequest, User.class);
 
-        userRequest.setRoles(List.of(roleRepository.findById(USER_ROLE_ID).orElseThrow(() -> new EntityNotFound("Role não encontrado"))));
+        user.setRoles(List.of(roleRepository.findById(role).orElseThrow(() -> new EntityNotFound("Role não encontrado"))));
 
-        userRequest.setPassword(bCrypt.encode(user.getPassword()));
+        user.setPassword(bCrypt.encode(userRequest.getPassword()));
 
-        repository.save(userRequest);
-
-        return mapper.map(userRequest, UserResponseDTO.class);
+        return user;
     }
 }
