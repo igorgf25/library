@@ -43,7 +43,7 @@ public class UserServiceImpl implements UserService {
         return mapper.map(response, UserResponseDTO.class);
     }
 
-    public User userConverter(UserRequestDTO userRequest, Long role) {
+    private User userConverter(UserRequestDTO userRequest, Long role) {
         BCryptPasswordEncoder bCrypt = new BCryptPasswordEncoder();
 
         User user = mapper.map(userRequest, User.class);
