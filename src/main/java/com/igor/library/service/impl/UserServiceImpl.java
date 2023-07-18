@@ -8,12 +8,14 @@ import com.igor.library.repository.RoleRepository;
 import com.igor.library.repository.UserRepository;
 import com.igor.library.service.UserService;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Slf4j
 @Service
 @AllArgsConstructor
 public class UserServiceImpl implements UserService {
@@ -29,6 +31,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserResponseDTO createUser(UserRequestDTO user) {
+        log.info("UserServiceImpl.createUser inserting an user in the database");
 
         User response = repository.save(userConverter(user, USER_ROLE_ID));
 
@@ -37,6 +40,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserResponseDTO createAdmin(UserRequestDTO user) {
+        log.info("UserServiceImpl.createAdmin inserting an admin in the database");
 
         User response = repository.save(userConverter(user, ADMIN_ROLE_ID));
 
@@ -44,11 +48,13 @@ public class UserServiceImpl implements UserService {
     }
 
     private User userConverter(UserRequestDTO userRequest, Long role) {
+        log.info("UserServiceImpl.userConverter converting an user/admin to save in the database");
+
         BCryptPasswordEncoder bCrypt = new BCryptPasswordEncoder();
 
         User user = mapper.map(userRequest, User.class);
 
-        user.setRoles(List.of(roleRepository.findById(role).orElseThrow(() -> new EntityNotFound("Role não encontrado"))));
+        user.setRoles(List.of(roleRepository.findById(role).orElseThrow(() -> new EntityNotFound("Role not found"))));
 
         user.setPassword(bCrypt.encode(userRequest.getPassword()));
 

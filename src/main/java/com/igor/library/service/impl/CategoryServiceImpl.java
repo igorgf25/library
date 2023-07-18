@@ -8,6 +8,7 @@ import com.igor.library.model.response.CategoryResponseDTO;
 import com.igor.library.repository.CategoryRepository;
 import com.igor.library.service.CategoryService;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
+@Slf4j
 @Service
 @AllArgsConstructor
 public class CategoryServiceImpl implements CategoryService {
@@ -26,17 +28,28 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public Page<CategoryResponseDTO> getAll(int page, int size, String sort) {
+        log.info("CategoryServiceImpl.getAll getting all the categories in the database");
         Pageable pageable = PageRequest.of(page, size, Sort.Direction.ASC, sort);
         Page<Category> resultPage = repository.findAll(pageable);
+
         return resultPage.map( obj -> mapper.map(obj, CategoryResponseDTO.class));
     }
 
     @Override
+    public CategoryResponseDTO getById(Long id) {
+        log.info("CategoryServiceImpl.getById getting the category with id " + id + ".");
+        Category category = repository.findById(id).orElseThrow(() -> new EntityNotFound("Category with the " + id + " not found."));
+
+        return mapper.map(category, CategoryResponseDTO.class);
+    }
+
+    @Override
     public CategoryResponseDTO create(CategoryRequestDTO category) {
+        log.info("CategoryServiceImpl.create inserting a category in the database");
         Optional<Category> alreadyExists = repository.findCategoryByName(category.getName());
 
         if (alreadyExists.isPresent()) {
-            throw new EntityAlreadyExist("Categoria já registrada no banco de dados.");
+            throw new EntityAlreadyExist("Category already exists.");
         }
 
         Category categoryResponse = repository.save(mapper.map(category, Category.class));
@@ -45,18 +58,13 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public CategoryResponseDTO getById(Long id) {
-        Category category = repository.findById(id).orElseThrow(() -> new EntityNotFound("Categoria com o id: " + id + " não encontrada."));
-
-        return mapper.map(category, CategoryResponseDTO.class);
-    }
-
-    @Override
     public CategoryResponseDTO update(Long id, CategoryRequestDTO categoryRequest) {
+        log.info("CategoryServiceImpl.update updating the category with id " + id + ".");
+
         Optional<Category> categoryVerification = repository.findById(id);
 
         if (categoryVerification.isEmpty()) {
-            throw new EntityNotFound("Categoria não existe no banco de dados.");
+            throw new EntityNotFound("Category not found.");
         }
 
         Category category = mapper.map(categoryRequest, Category.class);
@@ -69,9 +77,12 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public void delete(Long id) {
+        log.info("CategoryServiceImpl.delete deleting the category with id " + id + ".");
+
         Optional<Category> authorVerification = repository.findById(id);
+
         if (authorVerification.isEmpty()) {
-            throw new EntityNotFound("Categoria não existe no banco de dados.");
+            throw new EntityNotFound("Category nor found.");
         }
 
         repository.deleteById(id);

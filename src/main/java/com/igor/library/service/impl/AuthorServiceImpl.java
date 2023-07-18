@@ -8,6 +8,7 @@ import com.igor.library.model.response.AuthorResponseDTO;
 import com.igor.library.repository.AuthorRepository;
 import com.igor.library.service.AuthorService;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
+@Slf4j
 @Service
 @AllArgsConstructor
 public class AuthorServiceImpl implements AuthorService {
@@ -27,6 +29,7 @@ public class AuthorServiceImpl implements AuthorService {
 
     @Override
     public Page<AuthorResponseDTO> getAll(int page, int size, String sort) {
+        log.info("AuthorServiceImpl.getAll getting all the authors in the database");
         Pageable pageable = PageRequest.of(page, size, Sort.Direction.ASC, sort);
         Page<Author> resultPage = repository.findAll(pageable);
         return resultPage.map(obj -> mapper.map(obj, AuthorResponseDTO.class));
@@ -34,16 +37,18 @@ public class AuthorServiceImpl implements AuthorService {
 
     @Override
     public AuthorResponseDTO getById(Long id) {
-        Author author = repository.findById(id).orElseThrow(() -> new EntityNotFound("Autor com o id " + id + " não encontrada."));
+        log.info("AuthorServiceImpl.getById getting the author with id " + id + ".");
+        Author author = repository.findById(id).orElseThrow(() -> new EntityNotFound("Author with id " + id + " not found."));
         return mapper.map(author, AuthorResponseDTO.class);
     }
 
     @Override
     public AuthorResponseDTO create(AuthorRequestDTO author) {
+        log.info("AuthorServiceImpl.create inserting an author in the database");
         Optional<Author> alreadyExist = repository.findAuthorByBirthDataAndName(author.getBirthDate(), author.getName());
 
         if (alreadyExist.isPresent()) {
-            throw new EntityAlreadyExist("Author já registrado no banco de dados.");
+            throw new EntityAlreadyExist("Author already exists in the database.");
         }
 
         Author authorResponse = repository.save(mapper.map(author, Author.class));
@@ -52,10 +57,11 @@ public class AuthorServiceImpl implements AuthorService {
 
     @Override
     public AuthorResponseDTO update(Long id, AuthorRequestDTO author) {
+        log.info("AuthorServiceImpl.update updating the author with id " + id +".");
         Optional<Author> authorVerification = repository.findById(id);
 
         if (authorVerification.isEmpty()) {
-            throw new EntityNotFound("Author não existe no banco de dados.");
+            throw new EntityNotFound("Author not found.");
         }
 
         author.setId(id);
@@ -65,9 +71,10 @@ public class AuthorServiceImpl implements AuthorService {
 
     @Override
     public void delete(Long id) {
+        log.info("AuthorServiceImpl.delete deleting author with id " + id + ".");
         Optional<Author> authorVerification = repository.findById(id);
         if (authorVerification.isEmpty()) {
-            throw new EntityNotFound("Author não existe no banco de dados.");
+            throw new EntityNotFound("Author not found.");
         }
 
         repository.deleteById(id);
