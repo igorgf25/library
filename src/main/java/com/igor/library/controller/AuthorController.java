@@ -36,7 +36,7 @@ public class AuthorController {
     @PostMapping
     public ResponseEntity<AuthorResponseDTO> create(@Valid @RequestBody AuthorRequestDTO author, Errors errors) {
         if (errors.hasErrors()) {
-            throw new EntityInvalid("Informações inválidas, por favor preencha todos os campos");
+            throw new EntityInvalid("Invalid information, please fill in all fields");
         }
 
         return new ResponseEntity<>(authorService.create(author), HttpStatus.CREATED);
@@ -45,7 +45,7 @@ public class AuthorController {
     @PutMapping("/{id}")
     public ResponseEntity<AuthorResponseDTO> update(@Valid @RequestBody AuthorRequestDTO author, Errors errors, @PathVariable("id") Long id) {
         if (errors.hasErrors()) {
-            throw new EntityInvalid("Informações inválidas, por favor preencha todos os campos");
+            throw new EntityInvalid("Invalid information, please fill in all fields");
         }
 
         return new ResponseEntity<>(authorService.update(id, author), HttpStatus.OK);

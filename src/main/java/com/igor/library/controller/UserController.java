@@ -26,7 +26,7 @@ public class UserController {
     public ResponseEntity<UserResponseDTO> createUser(@Valid @RequestBody UserRequestDTO user, Errors errors) {
 
         if (errors.hasErrors()) {
-            throw new EntityInvalid("Informações inválidas, por favor preencha todos os campos");
+            throw new EntityInvalid("Invalid information, please fill in all fields");
         }
         return new ResponseEntity<>(userService.createUser(user), HttpStatus.CREATED);
     }
@@ -35,7 +35,7 @@ public class UserController {
     public ResponseEntity<UserResponseDTO> createAdmin(@Valid @RequestBody UserRequestDTO user, Errors errors) {
 
         if (errors.hasErrors()) {
-            throw new EntityInvalid("Informações inválidas, por favor preencha todos os campos");
+            throw new EntityInvalid("Invalid information, please fill in all fields");
         }
         return new ResponseEntity<>(userService.createAdmin(user), HttpStatus.CREATED);
     }

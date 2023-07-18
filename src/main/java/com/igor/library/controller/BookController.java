@@ -50,7 +50,7 @@ public class BookController {
     @PostMapping
     public ResponseEntity<BookResponseDTO> create(@Valid @RequestBody BookRequestDTO book, Errors errors) {
         if (errors.hasErrors()) {
-            throw new EntityInvalid("Informações inválidas, por favor preencha todos os campos");
+            throw new EntityInvalid("Invalid information, please fill in all fields");
         }
 
         return new ResponseEntity<>(bookService.create(book), HttpStatus.CREATED);
@@ -59,7 +59,7 @@ public class BookController {
     @PutMapping("/{id}")
     public ResponseEntity<BookResponseDTO> create(@Valid @RequestBody BookRequestDTO book, Errors errors, @PathVariable("id") Long id) {
         if (errors.hasErrors()) {
-            throw new EntityInvalid("Informações inválidas, por favor preencha todos os campos");
+            throw new EntityInvalid("Invalid information, please fill in all fields");
         }
 
         return new ResponseEntity<>(bookService.update(book, id), HttpStatus.OK);

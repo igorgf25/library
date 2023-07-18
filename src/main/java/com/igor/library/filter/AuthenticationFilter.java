@@ -35,7 +35,7 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
                     new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword(), user.getAuthorities()));
 
         } catch (Exception e) {
-            throw new AuthenticationFailed("Falha ao autenticar usuario");
+            throw new AuthenticationFailed("User authentication failed");
         }
     }
 
