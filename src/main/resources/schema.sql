@@ -26,6 +26,7 @@ CREATE TABLE tb_books (
     language varchar(50) not null ,
     publisher varchar(100) not null ,
     publication_date date not null ,
+    review_url varchar(250),
     author_id bigint not null ,
     category_id bigint not null,
     foreign key (author_id) references tb_authors(author_id),

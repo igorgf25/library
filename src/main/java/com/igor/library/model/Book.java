@@ -46,6 +46,9 @@ public class Book {
     @Column(name = "publication_date")
     private LocalDate publicationDate;
 
+    @Column(name = "review_url")
+    private String reviewUrl;
+
     @NotNull
     @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "author_id", referencedColumnName = "author_id")

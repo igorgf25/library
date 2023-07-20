@@ -4,6 +4,7 @@ import com.igor.library.exception.EntityAlreadyExist;
 import com.igor.library.exception.EntityNotFound;
 import com.igor.library.model.Author;
 import com.igor.library.model.Book;
+import com.igor.library.model.BookReview;
 import com.igor.library.model.Category;
 import com.igor.library.model.request.BookRequestDTO;
 import com.igor.library.model.response.BookResponseDTO;
@@ -11,20 +12,22 @@ import com.igor.library.repository.AuthorRepository;
 import com.igor.library.repository.BookRepository;
 import com.igor.library.repository.CategoryRepository;
 import com.igor.library.service.BookService;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.Optional;
 
 @Slf4j
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class BookServiceImpl implements BookService {
 
     private final BookRepository repository;
@@ -34,6 +37,12 @@ public class BookServiceImpl implements BookService {
     private final AuthorRepository authorRepository;
 
     private final CategoryRepository categoryRepository;
+
+    @Value("${nyt.url}")
+    private String urlNytApi;
+
+    @Value("${nyt.appKey}")
+    private String appKeyNyt;
 
     @Override
     public Page<BookResponseDTO> getAll(int page, int size, String sort) {
@@ -84,6 +93,27 @@ public class BookServiceImpl implements BookService {
         Book book = mapper.map(bookRequest, Book.class);
         book.setAuthor(authorOptional.get());
         book.setCategory(categoryOptional.get());
+
+        BookReview bookReview;
+
+        try {
+            WebClient.Builder builder = WebClient.builder();
+            bookReview = builder.build()
+                    .get()
+                    .uri(urlBuilder -> urlBuilder.path(urlNytApi)
+                            .queryParam("title", book.getTitle())
+                            .queryParam("api-key", appKeyNyt)
+                            .build())
+                    .retrieve()
+                    .bodyToMono(BookReview.class)
+                    .block();
+
+            if (!bookReview.getResults().isEmpty()) {
+                book.setReviewUrl(bookReview.getResults().get(0).getUrl());
+            }
+        } catch (Exception e) {
+            log.info("BookServiceImpl.create error while retrieving book review in the nyt api");
+        }
 
         Book savedBook = repository.save(book);
         return mapper.map(savedBook, BookResponseDTO.class);
