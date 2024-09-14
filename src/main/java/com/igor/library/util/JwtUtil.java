@@ -2,6 +2,7 @@ package com.igor.library.util;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.interfaces.DecodedJWT;
 import com.igor.library.model.User;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -21,15 +22,17 @@ public class JwtUtil {
         Date today = new Date();
         Date expirationDate = new Date(today.getTime() + Long.parseLong(tokenExpirationTime));
 
-        return JWT.create().withSubject(user.getUsername())
+        return JWT.create().withSubject(user.getUserId().toString())
                 .withExpiresAt(expirationDate)
+                .withClaim("username", user.getUsername())
+                .withClaim("password", user.getPassword())
+                .withClaim("roles", user.getRoles())
                 .sign(Algorithm.HMAC512(tokenSecret));
     }
 
-    public String getUserFromJWT(String token) {
+    public DecodedJWT getUserFromJWT(String token) {
         return JWT.require(Algorithm.HMAC512(tokenSecret))
                 .build()
-                .verify(token)
-                .getSubject();
+                .verify(token);
     }
 }
