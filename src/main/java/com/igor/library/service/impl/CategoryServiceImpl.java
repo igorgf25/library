@@ -7,7 +7,7 @@ import com.igor.library.model.request.CategoryRequestDTO;
 import com.igor.library.model.response.CategoryResponseDTO;
 import com.igor.library.repository.CategoryRepository;
 import com.igor.library.service.CategoryService;
-import lombok.RequiredArgsConstructor;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
@@ -20,7 +20,7 @@ import java.util.Optional;
 
 @Slf4j
 @Service
-@RequiredArgsConstructor
+@AllArgsConstructor
 public class CategoryServiceImpl implements CategoryService {
 
     private final CategoryRepository repository;

@@ -29,6 +29,4 @@ public class BookResponseDTO {
     private AuthorResponseDTO author;
 
     private CategoryResponseDTO category;
-
-    private String reviewUrl;
 }

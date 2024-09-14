@@ -7,7 +7,7 @@ import com.igor.library.model.response.UserResponseDTO;
 import com.igor.library.repository.RoleRepository;
 import com.igor.library.repository.UserRepository;
 import com.igor.library.service.UserService;
-import lombok.RequiredArgsConstructor;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -17,7 +17,7 @@ import java.util.List;
 
 @Slf4j
 @Service
-@RequiredArgsConstructor
+@AllArgsConstructor
 public class UserServiceImpl implements UserService {
 
     private final ModelMapper mapper;

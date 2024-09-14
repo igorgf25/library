@@ -40,6 +40,4 @@ public class BookRequestDTO {
 
     @NotNull
     private Long category;
-
-    private String reviewUrl;
 }

@@ -7,7 +7,7 @@ import com.igor.library.model.request.AuthorRequestDTO;
 import com.igor.library.model.response.AuthorResponseDTO;
 import com.igor.library.repository.AuthorRepository;
 import com.igor.library.service.AuthorService;
-import lombok.RequiredArgsConstructor;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
@@ -20,7 +20,7 @@ import java.util.Optional;
 
 @Slf4j
 @Service
-@RequiredArgsConstructor
+@AllArgsConstructor
 public class AuthorServiceImpl implements AuthorService {
 
     private final AuthorRepository repository;
